@@ -1,16 +1,10 @@
 /*
- * Locket Gold — Safe Merged Script
- * Data structure: @iouyongg
- * Safety filter: MaiTrungHieu (MaiHieu707)
- *
- * ✅ Chỉ can thiệp đúng app Locket
- * ✅ Các app khác dùng RevenueCat trên máy KHÔNG bị ảnh hưởng
- * ✅ Product ID chuẩn Việt Nam: locket_1600_1y (399,000 VND/năm)
+ * Locket Gold — Safe Merged Script (Full Entitlements + Filter Packs)
+ * Tác giả: MaiTrungHieu (MaiHieu707)
  */
 
 var ua = $request.headers["User-Agent"] || $request.headers["user-agent"] || "";
 
-// 🔒 Bộ lọc cứng: Không phải Locket → thoát ngay, không làm gì
 if (!ua.includes("Locket")) {
     $done({});
 } else {
@@ -56,19 +50,22 @@ if (!ua.includes("Locket")) {
     obj.subscriber.subscriptions   = obj.subscriber.subscriptions   || {};
     obj.subscriber.entitlements    = obj.subscriber.entitlements    || {};
 
-    // ✅ Unlock Gold (Product ID chuẩn Việt Nam)
+    // 1. Mở khóa Gold chính
     var goldProduct = "locket_1600_1y";
-    obj.subscriber.subscriptions[goldProduct]  = makeSub(goldProduct, 399000.0, "VND");
-    obj.subscriber.entitlements["Gold"]         = makeEnt(goldProduct);
+    obj.subscriber.subscriptions[goldProduct] = makeSub(goldProduct, 399000.0, "VND");
+    obj.subscriber.entitlements["Gold"]        = makeEnt(goldProduct);
 
-    // 🎨 Filter Pack — Bỏ comment nếu muốn mở thêm bộ lọc
-    // var pack10 = "com.locket.Locket.FilterPack_10Photos_400";
-    // obj.subscriber.subscriptions[pack10] = makeSub(pack10, 0.0, "USD");
-    // obj.subscriber.entitlements["effect_pack_10"] = makeEnt(pack10);
-    //
-    // var pack20 = "com.locket.Locket.FilterPack_20Photos_500";
-    // obj.subscriber.subscriptions[pack20] = makeSub(pack20, 0.0, "USD");
-    // obj.subscriber.entitlements["effect_pack_20"] = makeEnt(pack20);
+    // 2. Mở khóa toàn bộ các gói Filter Packs & Effects
+    var pack10 = "com.locket.Locket.FilterPack_10Photos_400";
+    obj.subscriber.subscriptions[pack10]       = makeSub(pack10, 0.0, "USD");
+    obj.subscriber.entitlements["effect_pack_10"] = makeEnt(pack10);
+
+    var pack20 = "com.locket.Locket.FilterPack_20Photos_500";
+    obj.subscriber.subscriptions[pack20]       = makeSub(pack20, 0.0, "USD");
+    obj.subscriber.entitlements["effect_pack_20"] = makeEnt(pack20);
+
+    obj.subscriber.entitlements["filters"]         = makeEnt("filters");
+    obj.subscriber.entitlements["camera_filters"]  = makeEnt("camera_filters");
 
     $done({ body: JSON.stringify(obj) });
 }
