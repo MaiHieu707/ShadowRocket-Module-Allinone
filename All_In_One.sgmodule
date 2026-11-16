@@ -1,5 +1,5 @@
 #!name=Personal All In One
-#!desc=Locket Gold (Safe·2 lớp) · YouTube Premium · Spotify Premium · SoundCloud Go+ · PicsArt Gold · Meitu VIP · Nicegram Pro · TestFlight Unlock
+#!desc=Locket Gold (Full tính năng 3 lớp) · YouTube Premium · Spotify Premium · SoundCloud Go+ · PicsArt Gold · Meitu VIP · Nicegram Pro · TestFlight Unlock
 #!author=MaiTrungHieu
 #!homepage=https://github.com/MaiHieu707/ShadowRocket-Module-Allinone
 #!moduleUrl=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/All_In_One.sgmodule
@@ -10,7 +10,7 @@ AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,UDP)),REJECT
 
 [Header Rewrite]
-# Xóa cache header → Ép server trả dữ liệu 200 đầy đủ, tránh 304 Not Modified
+# Xóa cache header
 ^https?://api\.revenuecat\.com/.+/(receipts$|subscribers/?(.*?)*$) header-del x-revenuecat-etag
 ^https?://api\.revenuecat\.com/.+/(receipts$|subscribers/?(.*?)*$) header-del X-RevenueCat-ETag
 http-request ^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/user-customization-service\/v1\/customize$ header-del if-none-match
@@ -26,65 +26,50 @@ http-request ^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:4
 [Script]
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1. LOCKET GOLD — Lớp 1: RevenueCat
-#    ✅ Bộ lọc cứng theo User-Agent
-#    ✅ Product ID chuẩn Việt Nam (locket_1600_1y / 399k VND)
-#    ✅ Các app khác dùng RevenueCat KHÔNG bị ảnh hưởng
+# 1. LOCKET GOLD — BỘ 3 LỚP ĐẦY ĐỦ TÍNH NĂNG
+#    Lớp 1 (Request): Xóa cache headers, ép server trả dữ liệu mới 200 OK
+#    Lớp 2 (Response RC): Cấp Gold vĩnh viễn (Product ID chuẩn VN)
+#    Lớp 3 (Response Firebase): Mở full camera 60s, filters, 100+ caption
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+deleteHeader = type=http-request,pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers),timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/deleteHeader.js
 LocketGold = type=http-response,pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^/]+$),requires-body=true,max-size=-1,timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/locket.js
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 2. LOCKET GOLD — Lớp 2: Firebase Remote Config
-#    ✅ Mở khóa feature flags UI (widget, video dài, nhiều bạn...)
-#    ✅ Chỉ can thiệp project locket-4252a của Locket
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 LocketFirebase = type=http-response,pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+,requires-body=true,max-size=-1,timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/locket_firebase.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 3. YOUTUBE PREMIUM
-#    Tác giả: Maasea (github.com/Maasea/sgmodule)
-#    Tính năng: Chặn ads, PiP, chạy nền, Lyric/Sub tiếng Việt
+# 2. YOUTUBE PREMIUM (Maasea)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 YouTube_Req = type=http-request,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|reel\/reel_watch_sequence|get_watch),requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.preview.js
 YouTube_Res = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.preview.js,argument={"lyricLang":"vi","captionLang":"vi","blockUpload":true,"blockImmersive":true,"debug":false}
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 4. SPOTIFY PREMIUM
-#    Tác giả: app2smile (github.com/app2smile/rules)
-#    ⚠️  Yêu cầu iOS 15+
-#    ⚠️  Không đặt chất lượng "Very High" (Rất cao)
+# 3. SPOTIFY PREMIUM (app2smile)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Spotify_JSON = type=http-request,pattern=^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/(artistview\/v1\/artist|album-entity-view\/v2\/album)\/,requires-body=0,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-json.js
 Spotify_Proto = type=http-response,pattern=^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/(bootstrap\/v1\/bootstrap|user-customization-service\/v1\/customize)$,requires-body=1,binary-body-mode=1,max-size=0,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-proto.js,script-update-interval=0
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 5. SOUNDCLOUD GO+
-#    Tác giả: ddgksf2013
+# 4. SOUNDCLOUD GO+ (ddgksf2013)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SoundCloud = type=http-response,pattern=^https:\/\/api-mobile\.soundcloud\.com\/configuration\/ios,requires-body=1,script-path=https://ddgksf2013.top/scripts/soundcloud.vip.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 6. PICSART GOLD & CLOUD STORAGE
-#    Tác giả: ddgksf2013
+# 5. PICSART GOLD & CLOUD STORAGE (ddgksf2013)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PicsArt_Purchase = type=http-request,pattern=^https:\/\/api\.picsart\.com\/gw-v2\/shop\/subscription\/apple\/purchases,requires-body=true,timeout=60,script-path=https://ddgksf2013.top/scripts/picsart.vip.js
 PicsArt_Storage = type=http-response,pattern=^https:\/\/api\.picsart\.com\/gw-v2\/cloud-storage\/v1\/me\/storages,requires-body=1,max-size=0,script-path=https://ddgksf2013.top/scripts/picsartstorage.vip.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 7. MEITU XIUXIU VIP
-#    Tác giả: ddgksf2013
+# 6. MEITU XIUXIU VIP (ddgksf2013)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Meitu = type=http-response,pattern=^https?:\/\/(h5|api)\.xiuxiu\.meitu\.com\/v\d\/(h\d\/vip|vip|user)\/,requires-body=1,script-path=https://ddgksf2013.top/scripts/meitu.vip.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 8. NICEGRAM PRO
-#    Tác giả: ddgksf2013
+# 7. NICEGRAM PRO (ddgksf2013)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Nicegram = type=http-response,pattern=^https?:\/\/api\.nicegram\.app\/(user\/info|profile\/premium),requires-body=1,max-size=0,script-path=https://ddgksf2013.top/scripts/nicegram.vip.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 9. TESTFLIGHT REGION UNLOCK
-#    Tác giả: NobyDa (github.com/NobyDa/Script)
+# 8. TESTFLIGHT REGION UNLOCK (NobyDa)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TestFlight = type=http-request,pattern=^https?:\/\/testflight\.apple\.com\/v\d\/accounts,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/TestFlight/TestFlightAccount.js
 
