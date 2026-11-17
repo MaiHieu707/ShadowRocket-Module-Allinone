@@ -348,6 +348,21 @@ if (ua.includes("Locket")) {
                 ]
             },
             {
+                section: "👑 Góc Của Híu",
+                items: [
+                    { overlay_id: "caption:hiu_dayyy", source: "remote", caption: { background: { colors: ["#6366F1", "#A855F7", "#EC4899"] }, icon: { data: "👋", type: "emoji" }, max_lines: 1, text: "Híu đâyyy", localized_text: { en: "Híu đâyyy", vn: "Híu đâyyy" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:hiu_handsome", source: "remote", caption: { background: { colors: ["#18181B", "#27272A", "#3F3F46"] }, icon: { data: "🕶️", type: "emoji" }, max_lines: 1, text: "Híu said: Quá là đẹp trai", localized_text: { en: "Híu said: Quá là đẹp trai", vn: "Híu said: Quá là đẹp trai" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:goc_cua_hiu", source: "remote", caption: { background: { colors: ["#F59E0B", "#F97316", "#EF4444"] }, icon: { data: "✨", type: "emoji" }, max_lines: 1, text: "Góc của Híu", localized_text: { en: "Góc của Híu", vn: "Góc của Híu" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:hiu_chill", source: "remote", caption: { background: { colors: ["#00C6FF", "#0072FF"] }, icon: { data: "🎧", type: "emoji" }, max_lines: 1, text: "Híu đang chill", localized_text: { en: "Híu đang chill", vn: "Híu đang chill" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:hiu_bat_on", source: "remote", caption: { background: { colors: ["#FF416C", "#FF4B2B"] }, icon: { data: "🚑", type: "emoji" }, max_lines: 1, text: "Híu bất ổn nhưng hết cứu", localized_text: { en: "Híu bất ổn nhưng hết cứu", vn: "Híu bất ổn nhưng hết cứu" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:hiu_deadline", source: "remote", caption: { background: { colors: ["#F7971E", "#FFD200"] }, icon: { data: "⚡", type: "emoji" }, max_lines: 1, text: "Híu chạy deadline", localized_text: { en: "Híu chạy deadline", vn: "Híu chạy deadline" }, text_color: "#18181B", type: "static_content" } },
+                    { overlay_id: "caption:hiu_flex", source: "remote", caption: { background: { colors: ["#11998E", "#38EF7D"] }, icon: { data: "💸", type: "emoji" }, max_lines: 1, text: "Híu flex nhẹ", localized_text: { en: "Híu flex nhẹ", vn: "Híu flex nhẹ" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:nho_hiu_hong", source: "remote", caption: { background: { colors: ["#FF758C", "#FF7EB3"] }, icon: { data: "🥺", type: "emoji" }, max_lines: 1, text: "Nhớ Híu hong?", localized_text: { en: "Nhớ Híu hong?", vn: "Nhớ Híu hong?" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:chup_cho_ai_do", source: "remote", caption: { background: { colors: ["#E91E63", "#FF80AB"] }, icon: { data: "💌", type: "emoji" }, max_lines: 1, text: "Chụp riêng cho bạn xem", localized_text: { en: "Chụp riêng cho bạn xem", vn: "Chụp riêng cho bạn xem" }, text_color: "#FFFFFF", type: "static_content" } },
+                    { overlay_id: "caption:hiu_ngu_day", source: "remote", caption: { background: { colors: ["#2E0854", "#180B22"] }, icon: { data: "🌙", type: "emoji" }, max_lines: 1, text: "Híu đi ngủ đây", localized_text: { en: "Híu đi ngủ đây", vn: "Híu đi ngủ đây" }, text_color: "#FFFFFF", type: "static_content" } },
+                ]
+            },
+            {
                 section: "🎨 Holiday Caption",
                 items: [
                     { overlay_id: "caption:halloween_2026", source: "remote", caption: { background: { colors: ["#150804", "#C8540D"] }, icon: { type: "image", data: "https://storage.googleapis.com/locket-public/journal_calendar_assets/holiday_indicators/halloween_indicator%403x.png", source: "url" }, max_lines: 1, text: "Halloween", localized_text: { en: "Halloween", vn: "Halloween" }, text_color: "#FFB182", type: "static_content" } },
