@@ -1,20 +1,20 @@
 /*
  * Nicegram Pro Unlock Script
- * Endpoint: api.nicegram.app/(user/info|profile/premium)
- * Tác giả gốc: ddgksf2013 | Host: MaiHieu707
+ * Endpoint: restore-access.indream.app/restoreAccess
+ * Host: MaiHieu707
  */
 
 let body = $response.body;
 
 try {
     let obj = JSON.parse(body);
-    if (obj.data) {
-        obj.data.premium = true;
-        obj.data.has_premium = true;
-    }
-    if (obj.user) {
-        obj.user.premium = true;
-    }
+    obj.data = {
+        "premium": true,
+        "has_premium": true,
+        "expires": 4070908800
+    };
+    obj.premium = true;
+    obj.sync = true;
     $done({ body: JSON.stringify(obj) });
 } catch (e) {
     $done({});

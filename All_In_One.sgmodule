@@ -46,7 +46,7 @@ youtube.request.log_event = type=http-request,pattern=^https:\/\/youtubei\.googl
 # 3. SPOTIFY PREMIUM (app2smile)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Spotify_JSON = type=http-request,pattern=^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/(artistview\/v1\/artist|album-entity-view\/v2\/album)\/,requires-body=0,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-json.js
-Spotify_Proto = type=http-response,pattern=^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/(bootstrap\/v1\/bootstrap|user-customization-service\/v1\/customize)$,requires-body=1,binary-body-mode=1,max-size=0,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-proto.js
+Spotify_Proto = type=http-response,pattern=^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/(bootstrap\/v1\/bootstrap|user-customization-service\/v1\/customize)$,requires-body=1,binary-body-mode=1,max-size=-1,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-proto.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 4. SOUNDCLOUD GO+ (Tự host trên Repo cá nhân)
@@ -56,17 +56,17 @@ SoundCloud = type=http-response,pattern=^https:\/\/api-mobile\.soundcloud\.com\/
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 5. PICSART GOLD (Tự host trên Repo cá nhân)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PicsArt = type=http-response,pattern=^https:\/\/api\.picsart\.com\/gw-v2\/shop\/subscription\/apple\/purchases,requires-body=true,timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/picsart.js
+PicsArt = type=http-response,pattern=^https?:\/\/api\.picsart\.com\/(gw-v2\/shop\/subscription\/apple\/purchases|shop\/v\d\/subscriptions|users\/show\/me\.json),requires-body=true,timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/picsart.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 6. MEITU XIUXIU VIP (Tự host trên Repo cá nhân)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Meitu = type=http-response,pattern=^https?:\/\/(h5|api)\.xiuxiu\.meitu\.com\/v\d\/(h\d\/vip|vip|user)\/,requires-body=1,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/meitu.js
+Meitu = type=http-response,pattern=^https?:\/\/((h5|api)\.xiuxiu|api-sub)\.meitu\.com\/(v\d\/(h\d\/vip|vip|user)|v\d\/user\/vip_info_by_group\.json),requires-body=1,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/meitu.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 7. NICEGRAM PRO (Tự host trên Repo cá nhân)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Nicegram = type=http-response,pattern=^https?:\/\/api\.nicegram\.app\/(user\/info|profile\/premium),requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/nicegram.js
+Nicegram = type=http-response,pattern=^https?:\/\/restore-access\.indream\.app\/restoreAccess\?id=\d+.*,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/nicegram.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 8. TESTFLIGHT REGION UNLOCK (NobyDa)
@@ -77,4 +77,4 @@ TestFlight = type=http-request,pattern=^https?:\/\/testflight\.apple\.com\/v\d\/
 ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad data-type=text data="" status-code=200
 
 [MITM]
-hostname = %APPEND%, *.googlevideo.com, youtubei.googleapis.com, www.youtube.com, s.youtube.com, -redirector*.googlevideo.com, api.revenuecat.com, firebaseremoteconfig.googleapis.com, spclient.wg.spotify.com, *spclient.spotify.com, api-mobile.soundcloud.com, api.picsart.com, h5.xiuxiu.meitu.com, api.xiuxiu.meitu.com, api.nicegram.app, testflight.apple.com
+hostname = %APPEND%, *.googlevideo.com, youtubei.googleapis.com, www.youtube.com, s.youtube.com, -redirector*.googlevideo.com, api.revenuecat.com, firebaseremoteconfig.googleapis.com, spclient.wg.spotify.com, *spclient.spotify.com, api-mobile.soundcloud.com, api.picsart.com, h5.xiuxiu.meitu.com, api.xiuxiu.meitu.com, api-sub.meitu.com, restore-access.indream.app, testflight.apple.com
