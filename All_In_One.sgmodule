@@ -1,19 +1,18 @@
-#!name=Personal All In One
-#!desc=Locket Gold (Full tính năng 3 lớp) · YouTube Premium · Spotify Premium · SoundCloud Go+ · PicsArt Gold · Meitu VIP · Nicegram Pro · TestFlight Unlock
+#!name=Personal Trio (Locket · YouTube · SoundCloud)
+#!desc=Module tối ưu siêu nhẹ và ổn định 100%: Locket Gold (Full 3 lớp), YouTube Premium (Chặn Ads, PiP, Nền), SoundCloud Go+
 #!author=MaiTrungHieu
 #!homepage=https://github.com/MaiHieu707/ShadowRocket-Module-Allinone
 #!moduleUrl=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/All_In_One.sgmodule
 
 [Rule]
-# Ép YouTube dùng TCP thay UDP/QUIC → Shadowrocket mới can thiệp được
+# Ép YouTube dùng TCP thay UDP/QUIC để giải mã HTTPS
 AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,UDP)),REJECT
 
 [Header Rewrite]
-# Xóa cache header
+# Xóa cache header của RevenueCat để luôn nhận dữ liệu VIP mới nhất
 ^https?://api\.revenuecat\.com/.+/(receipts$|subscribers/?(.*?)*$) header-del x-revenuecat-etag
 ^https?://api\.revenuecat\.com/.+/(receipts$|subscribers/?(.*?)*$) header-del X-RevenueCat-ETag
-http-request ^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/user-customization-service\/v1\/customize$ header-del if-none-match
 
 [Url Rewrite]
 # Chặn quảng cáo video YouTube
@@ -26,55 +25,33 @@ http-request ^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:4
 [Script]
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 1. LOCKET GOLD — BỘ 3 LỚP ĐẦY ĐỦ TÍNH NĂNG
-#    Lớp 1 (Request): Xóa cache headers, ép server trả dữ liệu mới 200 OK
-#    Lớp 2 (Response RC): Cấp Gold vĩnh viễn (Product ID chuẩn VN)
-#    Lớp 3 (Response Firebase): Mở full camera 60s, filters, 100+ caption
+# 1. LOCKET GOLD — BỘ 3 LỚP HOÀN HẢO
+#    - Lớp 1: Xóa cache header
+#    - Lớp 2: Cấp gói Gold chuẩn VN 399k
+#    - Lớp 3: Mở full quay 60s, 100+ caption tiếng Việt, filters
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 deleteHeader = type=http-request,pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts|subscribers),timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/deleteHeader.js
 LocketGold = type=http-response,pattern=^https:\/\/api\.revenuecat\.com\/.+\/(receipts$|subscribers\/[^/]+$),requires-body=true,max-size=-1,timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/locket.js
 LocketFirebase = type=http-response,pattern=^https:\/\/firebaseremoteconfig\.googleapis\.com\/v1\/projects\/locket-4252a\/.+,requires-body=true,max-size=-1,timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/locket_firebase.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 2. YOUTUBE PREMIUM (Maasea chuẩn mới nhất)
+# 2. YOUTUBE PREMIUM (Maasea)
+#    - Chặn sạch quảng cáo video, quảng cáo trang chủ
+#    - Chạy nền khi tắt màn hình, Picture-in-Picture (PiP)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch|log_event|config))(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"captionLang":"vi","blockUpload":true,"blockImmersive":true,"blockShorts":false,"debug":false}"
 youtube.request.init = type=http-request,pattern=^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&ack.*,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js,argument="{"captionLang":"vi"}"
 youtube.request.log_event = type=http-request,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/log_event,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 3. SPOTIFY PREMIUM (app2smile)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Spotify_JSON = type=http-request,pattern=^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/(artistview\/v1\/artist|album-entity-view\/v2\/album)\/,requires-body=0,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-json.js
-Spotify_Proto = type=http-response,pattern=^https:\/\/(spclient\.wg\.spotify\.com|.*-spclient\.spotify\.com(:443)?)\/(bootstrap\/v1\/bootstrap|user-customization-service\/v1\/customize)$,requires-body=1,binary-body-mode=1,max-size=-1,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/spotify-proto.js
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 4. SOUNDCLOUD GO+ (Tự host trên Repo cá nhân)
+# 3. SOUNDCLOUD GO+ (Tự host)
+#    - Chặn 100% quảng cáo âm thanh chen ngang
+#    - Âm thanh chất lượng cao, chuyển bài không giới hạn
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SoundCloud = type=http-response,pattern=^https:\/\/api-mobile\.soundcloud\.com\/configuration\/ios,requires-body=1,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/soundcloud.js
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 5. PICSART GOLD (Tự host trên Repo cá nhân)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PicsArt = type=http-response,pattern=^https?:\/\/api\.picsart\.com\/(gw-v2\/shop\/subscription\/apple\/purchases|shop\/v\d\/subscriptions|users\/show\/me\.json),requires-body=true,timeout=60,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/picsart.js
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 6. MEITU XIUXIU VIP (Tự host trên Repo cá nhân)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Meitu = type=http-response,pattern=^https?:\/\/((h5|api)\.xiuxiu|api-sub)\.meitu\.com\/(v\d\/(h\d\/vip|vip|user)|v\d\/user\/vip_info_by_group\.json),requires-body=1,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/meitu.js
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 7. NICEGRAM PRO (Tự host trên Repo cá nhân)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Nicegram = type=http-response,pattern=^https?:\/\/restore-access\.indream\.app\/restoreAccess\?id=\d+.*,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/MaiHieu707/ShadowRocket-Module-Allinone/main/js/nicegram.js
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 8. TESTFLIGHT REGION UNLOCK (NobyDa)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-TestFlight = type=http-request,pattern=^https?:\/\/testflight\.apple\.com\/v\d\/accounts,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/TestFlight/TestFlightAccount.js
 
 [Map Local]
 ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad data-type=text data="" status-code=200
 
 [MITM]
-hostname = %APPEND%, *.googlevideo.com, youtubei.googleapis.com, www.youtube.com, s.youtube.com, -redirector*.googlevideo.com, api.revenuecat.com, firebaseremoteconfig.googleapis.com, spclient.wg.spotify.com, *spclient.spotify.com, api-mobile.soundcloud.com, api.picsart.com, h5.xiuxiu.meitu.com, api.xiuxiu.meitu.com, api-sub.meitu.com, restore-access.indream.app, testflight.apple.com
+hostname = %APPEND%, *.googlevideo.com, youtubei.googleapis.com, www.youtube.com, s.youtube.com, -redirector*.googlevideo.com, api.revenuecat.com, firebaseremoteconfig.googleapis.com, api-mobile.soundcloud.com
